@@ -43,7 +43,7 @@ function current_posts_contents() {
     //Get today's date.
     $today = getdate();
     //Calculate midnight a week ago.
-    $start_time = mktime(0, 0, 0,$today['mon'],($today['mday'] - 30), $today['year']);
+    $start_time = mktime(0, 0, 0,$today['mon'],($today['mday'] - 7), $today['year']);
     //Get all posts from one week ago to the present.
     $end_time = time();
 
