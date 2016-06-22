@@ -105,18 +105,15 @@ function current_posts_block_view($delta = '') {
  */
 function current_posts_menu() {
     $items = array();
-
-    $items['admin/config/content/current_posts'] = array(
+    $items['current_posts'] = array(
         'title' => 'Current posts',
-        'description' => 'Configuration for Current posts module',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('current_posts_form'),
-        'access arguments' => array('access administration pages'),
-        'type' => MENU_NORMAL_ITEM,
+        'page callback' => '_current_posts_page',
+        'access arguments' => array('access current_posts content'),
+        'type' => MENU_NORMAL_ITEM, //Will appear in Navigation menu.
     );
-
     return $items;
 }
+
 
 /**
  * Page callback: Current posts settings
@@ -135,4 +132,34 @@ function current_posts_form($form, &$form_state) {
     );
 
     return system_settings_form($form);
+}
+
+/**
+ * Implements validation from the Form API.
+ *
+ * @param $form
+ *   A structured array containing the elements and properties of the form.
+ * @param $form_state
+ *   An array that stores information about the form's current state
+ *   during processing.
+ */
+function current_posts_form_validate($form, &$form_state){
+    $max_num = $form_state['values']['current_posts_max'];
+    if (!is_numeric($max_num)){
+        form_set_error('current_posts_max', t('You must enter a number for the maximum number of posts to display.'));
+    }
+    elseif ($max_num <= 0){
+        form_set_error('current_posts_max', t('Maximum number of posts to display must be positive.'));
+    }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function current_posts_permission() {
+    return array(
+        'access current_posts content' => array(
+            'title' => t('Access content for the Current posts module'),
+        )
+    );
 }
